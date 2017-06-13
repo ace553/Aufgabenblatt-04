@@ -27,13 +27,17 @@ public class StartupKinoticketverkauf_Blatt03
     public static void main(String[] args)
     {
         final Kino kino = erzeugeKinoMitBeispieldaten();
-        SwingUtilities.invokeLater(new Runnable()
+        
+        for(int i = 0; i < 2; i++)
         {
-            public void run()
-            {
-                new KassenWerkzeug(kino);
-            }
-        });
+        	SwingUtilities.invokeLater(new Runnable()
+        	{
+        		public void run()
+        		{
+        			new KassenWerkzeug(kino);
+        		}
+        	});
+        }
     }
 
     /**

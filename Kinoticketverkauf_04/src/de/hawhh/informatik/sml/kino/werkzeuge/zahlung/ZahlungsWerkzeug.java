@@ -5,10 +5,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.JFrame;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import de.hawhh.informatik.sml.kino.fachwerte.Geldbetrag;
 import de.hawhh.informatik.sml.kino.werkzeuge.ObservableSubwerkzeug;
@@ -49,7 +49,6 @@ public class ZahlungsWerkzeug extends ObservableSubwerkzeug
 		_zahlungsBetrag = zahlungsBetrag;
 		_bezahlt = false;
 		aktualisiereZahlungsBetragLabel();
-		_ui._gezahltTextField.setValue(new Double(0));
 		aktualisiereNochZuZahlenLabel();
 		_ui.zeigeFenster();
 	}
@@ -59,7 +58,7 @@ public class ZahlungsWerkzeug extends ObservableSubwerkzeug
 	 */
 	private void reagiereAufOkButtonKlick()
 	{
-		_ui.schliesseFenster();
+		_ui.versteckeFenster();
 		_bezahlt = true;
 		informiereUeberAenderung();
 	}
@@ -70,7 +69,7 @@ public class ZahlungsWerkzeug extends ObservableSubwerkzeug
 	 */
 	private void reagiereAufAbbrechenButtonKlick()
 	{
-		_ui.schliesseFenster();
+		_ui.versteckeFenster();
 		_bezahlt = false;
 		informiereUeberAenderung();
 	}
@@ -89,34 +88,25 @@ public class ZahlungsWerkzeug extends ObservableSubwerkzeug
 	 */
 	private void aktualisiereNochZuZahlenLabel()
 	{
-		Geldbetrag iBetrag = null;
-		if (_ui._gezahltTextField.getValue() instanceof Double)
-		{
-			Double betrag = (Double) _ui._gezahltTextField.getValue();
-			iBetrag = Geldbetrag.gibBetrag((int) Math.round(betrag * 100));
-		} else
-		{
-			Long betrag = (Long) _ui._gezahltTextField.getValue();
-			iBetrag = Geldbetrag.gibBetrag((int) (betrag * 100));
-		}
+		Geldbetrag iBetrag = Geldbetrag
+		        .gibBetrag(_ui._gezahltTextField.getText());
 
-		Geldbetrag nochZuZahlen = Geldbetrag.substrahiereGeldbetrag(_zahlungsBetrag, iBetrag);
-		
-		if(nochZuZahlen.gibEurocentWert() > 0)
+		Geldbetrag nochZuZahlen = Geldbetrag
+		        .substrahiereGeldbetrag(_zahlungsBetrag, iBetrag);
+
+		if (nochZuZahlen.gibEurocentWert() > 0)
 		{
 			_ui._okButton.setEnabled(false);
 
-			_ui._nochZuZahlenLabel
-			        .setText("Noch zu zahlen: "+nochZuZahlen.gibStringWert() +" €");
-			_ui._nochZuZahlenLabel.setForeground(Color.red);	
-		}
-		else
+			_ui._nochZuZahlenLabel.setText(
+			        "Noch zu zahlen: " + nochZuZahlen.gibStringWert() + " €");
+			_ui._nochZuZahlenLabel.setForeground(Color.red);
+		} else
 		{
 			_ui._okButton.setEnabled(true);
 
-			_ui._nochZuZahlenLabel
-			        .setText("Rückgeld: "+nochZuZahlen.gibStringWert().replace("-", "") +" €");
-			_ui._nochZuZahlenLabel.setForeground(Color.green);		
+			_ui._nochZuZahlenLabel.setText("Genug Bezahlt");
+			_ui._nochZuZahlenLabel.setForeground(Color.green);
 		}
 	}
 
@@ -125,8 +115,8 @@ public class ZahlungsWerkzeug extends ObservableSubwerkzeug
 	 */
 	private void aktualisiereZahlungsBetragLabel()
 	{
-		_ui._gesamtBetragLabel
-		        .setText("Gesamtbetrag: " + _zahlungsBetrag.gibStringWert() + " €");
+		_ui._gesamtBetragLabel.setText(
+		        "Gesamtbetrag: " + _zahlungsBetrag.gibStringWert() + " €");
 	}
 
 	/**
@@ -166,21 +156,39 @@ public class ZahlungsWerkzeug extends ObservableSubwerkzeug
 
 			}
 		});
-		_ui._gezahltTextField
-		        .addPropertyChangeListener(new PropertyChangeListener()
+		_ui._gezahltTextField.getDocument()
+		        .addDocumentListener(new DocumentListener()
 		        {
 
 			        @Override
-			        public void propertyChange(PropertyChangeEvent arg0)
+			        public void changedUpdate(DocumentEvent e)
 			        {
 				        reagiereAufTextEingabe();
+			        }
 
+			        @Override
+			        public void insertUpdate(DocumentEvent e)
+			        {
+				        reagiereAufTextEingabe();
+			        }
+
+			        @Override
+			        public void removeUpdate(DocumentEvent e)
+			        {
+				        reagiereAufTextEingabe();
 			        }
 		        });
 
 		_ui._dialog.addComponentListener(new ComponentListener()
 		{
+			@Override
+			public void componentHidden(ComponentEvent arg0)
+			{
+				reagiereAufAbbrechenButtonKlick();
 
+			}
+			
+			
 			@Override
 			public void componentShown(ComponentEvent arg0)
 			{
@@ -199,13 +207,6 @@ public class ZahlungsWerkzeug extends ObservableSubwerkzeug
 			public void componentMoved(ComponentEvent arg0)
 			{
 				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void componentHidden(ComponentEvent arg0)
-			{
-				reagiereAufAbbrechenButtonKlick();
 
 			}
 		});
