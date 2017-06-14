@@ -79,17 +79,17 @@ public class Vorstellung
 		_anzahlVerkauftePlaetze = 0;
 	}
 	
-	public boolean istNichtGesperrt(Platz platz)
+	public synchronized boolean istNichtGesperrt(Platz platz)
 	{
 		return _gesperrtVon[platz.getReihe()][platz.getSitz()] == 0;
 	}
 	
-	public boolean istGesperrtVon(Platz platz, int werkzeugID)
+	public synchronized boolean istGesperrtVon(Platz platz, int werkzeugID)
 	{
 		return _gesperrtVon[platz.getReihe()][platz.getSitz()] == werkzeugID;
 	}
 	
-	private void sperrePlatz(Platz platz, int werkzeugID)
+	private synchronized void sperrePlatz(Platz platz, int werkzeugID)
 	{
 		_gesperrtVon[platz.getReihe()][platz.getSitz()] = werkzeugID;
 	}
@@ -109,7 +109,7 @@ public class Vorstellung
 			gebePlatzFrei(platz);
 	}
 	
-	public void gebePlatzFrei(Platz platz)
+	public synchronized void gebePlatzFrei(Platz platz)
 	{
 		_gesperrtVon[platz.getReihe()][platz.getSitz()] = 0;
 	}
@@ -256,7 +256,7 @@ public class Vorstellung
 	 * @require platz != null
 	 * @require hatPlatz(platz)
 	 */
-	public boolean istPlatzVerkauft(Platz platz)
+	public synchronized boolean istPlatzVerkauft(Platz platz)
 	{
 		assert platz != null : "Vorbedingung verletzt: platz != null";
 		assert hatPlatz(platz) : "Vorbedingung verletzt: hatPlatz(platz)";
@@ -276,7 +276,7 @@ public class Vorstellung
 	 * 
 	 * @ensure istPlatzVerkauft(reihe, sitz)
 	 */
-	public void verkaufePlatz(Platz platz)
+	public synchronized void verkaufePlatz(Platz platz)
 	{
 		assert platz != null : "Vorbedingung verletzt: platz != null";
 		assert hatPlatz(platz) : "Vorbedingung verletzt: hatPlatz(platz)";
@@ -299,7 +299,7 @@ public class Vorstellung
 	 * 
 	 * @ensure !istPlatzVerkauft(reihe, sitz)
 	 */
-	public void stornierePlatz(Platz platz)
+	public synchronized void stornierePlatz(Platz platz)
 	{
 		assert platz != null : "Vorbedingung verletzt: platz != null";
 		assert hatPlatz(platz) : "Vorbedingung verletzt: hatPlatz(platz)";
@@ -313,7 +313,7 @@ public class Vorstellung
 	/**
 	 * Gibt die Anzahl verkaufter Plätze zurück.
 	 */
-	public int getAnzahlVerkauftePlaetze()
+	public synchronized int getAnzahlVerkauftePlaetze()
 	{
 		return _anzahlVerkauftePlaetze;
 	}
