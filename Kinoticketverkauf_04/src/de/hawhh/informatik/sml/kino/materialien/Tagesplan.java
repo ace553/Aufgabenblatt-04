@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import de.hawhh.informatik.sml.kino.fachwerte.Datum;
+import de.hawhh.informatik.sml.kino.services.VorstellungsService;
 
 /**
  * Ein Tagesplan verzeichnet alle Vorstellungen, die in dem Kino an einem
@@ -16,14 +17,14 @@ import de.hawhh.informatik.sml.kino.fachwerte.Datum;
 public class Tagesplan
 {
     private Datum _tag;
-    private List<Vorstellung> _vorstellungen;
+    private List<VorstellungsService> _vorstellungen;
 
     // Der Comparator wird zur Sortierung der Vorstellungen innerhalb eines
     // Tagesplans verwendet.
-    private static Comparator<Vorstellung> _vergleichNachAnfangszeit = new Comparator<Vorstellung>()
+    private static Comparator<VorstellungsService> _vergleichNachAnfangszeit = new Comparator<VorstellungsService>()
     {
         @Override
-        public int compare(Vorstellung v1, Vorstellung v2)
+        public int compare(VorstellungsService v1, VorstellungsService v2)
         {
             assert v1 != null : "Vorbedingung verletzt: v1 != null";
             assert v2 != null : "Vorbedingung verletzt: v2 != null";
@@ -48,7 +49,7 @@ public class Tagesplan
         assert tag != null : "Vorbedingung verletzt: tag != null";
 
         _tag = tag;
-        _vorstellungen = new ArrayList<Vorstellung>();
+        _vorstellungen = new ArrayList<VorstellungsService>();
     }
 
     /**
@@ -75,7 +76,7 @@ public class Tagesplan
         assert v != null : "Vorbedingung verletzt: v != null";
         assert v.getDatum().equals(_tag) : "Vorbedingung verletzt: v.getDatum().equals(_tag)";
 
-        _vorstellungen.add(v);
+        _vorstellungen.add(new VorstellungsService(v));
     }
 
     /**
@@ -84,9 +85,9 @@ public class Tagesplan
      * 
      * @ensure result != null
      */
-    public List<Vorstellung> getVorstellungen()
+    public List<VorstellungsService> getVorstellungen()
     {
-        List<Vorstellung> result = new ArrayList<Vorstellung>(_vorstellungen);
+        List<VorstellungsService> result = new ArrayList<VorstellungsService>(_vorstellungen);
         Collections.sort(result, _vergleichNachAnfangszeit);
         return result;
     }

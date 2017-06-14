@@ -24,7 +24,8 @@ class JPlatzButton extends JButton
     private static final Color FARBE_FREI = Color.GREEN;
     private static final Color FARBE_VERKAUFT = Color.RED;
     private static final Color FARBE_AUSGEWAEHLT = Color.YELLOW;
-
+    private static final Color FARBE_GESPERRT = Color.BLUE;
+    
     private final Border defaultBorder = new BevelBorder(BevelBorder.RAISED);
     private final Border loweredBorder = new BevelBorder(BevelBorder.LOWERED);
     private Border currentBorder = defaultBorder;
@@ -32,6 +33,7 @@ class JPlatzButton extends JButton
     private Platz _platz;
     private boolean _verkauft;
     private boolean _ausgewaehlt;
+    private boolean _gesperrt;
 
     /**
      * Erzeugt einen neuen Button. Der Button wird mit der Nummer des Sitzes in
@@ -48,6 +50,7 @@ class JPlatzButton extends JButton
         _platz = platz;
         _verkauft = false;
         _ausgewaehlt = false;
+        _gesperrt = false;
     }
 
     @Override
@@ -112,6 +115,10 @@ class JPlatzButton extends JButton
      */
     private Color farbeFuerAktuellenZustand()
     {
+    	if(_gesperrt)
+    	{
+    		return FARBE_GESPERRT;
+    	}
         if (_ausgewaehlt)
         {
             return FARBE_AUSGEWAEHLT;
@@ -151,6 +158,17 @@ class JPlatzButton extends JButton
     {
         _verkauft = verkauft;
         repaint();
+    }
+    
+    public void setGesperrt(boolean gesperrt)
+    {
+    	_gesperrt = gesperrt;
+    	repaint();
+    }
+    
+    public boolean istGesperrt()
+    {
+    	return _gesperrt;
     }
 
     /**

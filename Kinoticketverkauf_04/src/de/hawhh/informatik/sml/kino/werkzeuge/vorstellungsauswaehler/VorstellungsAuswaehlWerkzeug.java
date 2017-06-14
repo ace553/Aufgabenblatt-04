@@ -6,6 +6,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import de.hawhh.informatik.sml.kino.materialien.Tagesplan;
 import de.hawhh.informatik.sml.kino.materialien.Vorstellung;
+import de.hawhh.informatik.sml.kino.services.VorstellungsService;
 import de.hawhh.informatik.sml.kino.werkzeuge.ObservableSubwerkzeug;
 
 /**
@@ -54,9 +55,9 @@ public class VorstellungsAuswaehlWerkzeug extends ObservableSubwerkzeug
      * Gibt die derzeit ausgewählte Vorstellung zurück. Wenn keine Vorstellung
      * ausgewählt ist, wird <code>null</code> zurückgegeben.
      */
-    public Vorstellung getAusgewaehlteVorstellung()
+    public VorstellungsService getAusgewaehlteVorstellung()
     {
-        Vorstellung result = null;
+        VorstellungsService result = null;
         VorstellungsFormatierer adapter = (VorstellungsFormatierer) _ui
                 .getVorstellungAuswahlList().getSelectedValue();
         if (adapter != null)
@@ -77,7 +78,7 @@ public class VorstellungsAuswaehlWerkzeug extends ObservableSubwerkzeug
         assert tagesplan != null : "Vorbedingung verletzt: tagesplan != null";
 
         _tagesplan = tagesplan;
-        List<Vorstellung> vorstellungen = _tagesplan.getVorstellungen();
+        List<VorstellungsService> vorstellungen = _tagesplan.getVorstellungen();
         aktualisiereAngezeigteVorstellungsliste(vorstellungen);
     }
 
@@ -85,7 +86,7 @@ public class VorstellungsAuswaehlWerkzeug extends ObservableSubwerkzeug
      * Aktualisiert die Liste der Vorstellungen.
      */
     private void aktualisiereAngezeigteVorstellungsliste(
-            List<Vorstellung> vorstellungen)
+            List<VorstellungsService> vorstellungen)
     {
         VorstellungsFormatierer[] varray = new VorstellungsFormatierer[vorstellungen
                 .size()];

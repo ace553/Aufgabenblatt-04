@@ -22,6 +22,7 @@ class PlatzVerkaufsWerkzeugUI
     private JLabel _preisLabel;
     private JButton _verkaufenButton;
     private JButton _stornierenButton;
+    private JButton _deselectButton;
     private JPlatzplan _platzplan;
    
     /**
@@ -51,6 +52,8 @@ class PlatzVerkaufsWerkzeugUI
         preisPanel.add(_preisLabel, BorderLayout.CENTER);
         
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        _deselectButton = new JButton("Deselect");
+        buttonPanel.add(_deselectButton);
         _verkaufenButton = new JButton("Verkaufen");
         buttonPanel.add(_verkaufenButton);    
         _stornierenButton = new JButton("Stornieren");
@@ -95,6 +98,14 @@ class PlatzVerkaufsWerkzeugUI
     {
         return _verkaufenButton;
     }
+    
+    /**
+     * Gibt den Deselect-Button zurück.
+     */
+    public JButton getDeselectButton()
+	{
+		return _deselectButton;
+	}
     
     /**
      * Gibt das Panel zurück, in dem die Widgets angeordnet sind.

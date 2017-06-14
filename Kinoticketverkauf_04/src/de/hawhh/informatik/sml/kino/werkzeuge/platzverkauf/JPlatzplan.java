@@ -64,6 +64,11 @@ class JPlatzplan extends JComponent
                 // werden.
                 JPlatzButton button = (JPlatzButton) e.getSource();
 
+                // Wenn ein Platz gesperrt ist wird das Event ignoriert
+                if(button.istGesperrt())
+                {
+                	return;
+                }
                 // Je nachdem, ob der Platz bereits ausgewählt war, wird er aus
                 // der Menge der ausgewählten Plätze entfernt oder dieser
                 // hinzugefügt.
@@ -220,6 +225,13 @@ class JPlatzplan extends JComponent
     {
         assert platz != null : "Vorbedingung verletzt: platz != null";
         _buttons[platz.getReihe()][platz.getSitz()].setVerkauft(true);
+        repaint();
+    }
+    
+    public void sperrePlatz(Platz platz, boolean gesperrt)
+    {
+    	assert platz != null : "Vorbedingung verletzt: platz != null";
+        _buttons[platz.getReihe()][platz.getSitz()].setGesperrt(gesperrt);;
         repaint();
     }
 
