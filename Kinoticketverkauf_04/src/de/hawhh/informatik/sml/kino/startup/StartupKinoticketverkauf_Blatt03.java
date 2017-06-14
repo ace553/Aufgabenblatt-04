@@ -37,8 +37,6 @@ public class StartupKinoticketverkauf_Blatt03
 				public void run()
 				{
 					new KassenWerkzeug(kino);
-					// Erstelle zweites Werkzeug
-					new KassenWerkzeug(kino);
 				}
 			});
 		}
