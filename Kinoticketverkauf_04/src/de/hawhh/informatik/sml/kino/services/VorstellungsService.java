@@ -23,8 +23,20 @@ public class VorstellungsService extends AbstractObservableService
 
 	}
 
+	/**
+	 * Prüft ob ein Platz für ein ein Platzverkaufswerkzeug gesperrt ist.
+	 * 
+	 * @param platz
+	 *            Der zu prüfende Platz
+	 * @param werkzeugID
+	 *            Die WerkzeugID
+	 * @return True wenn Gesperrt sonst false
+	 * 
+	 * @require werkzeugID > 0
+	 */
 	public boolean istGesperrt(Platz platz, int werkzeugID)
 	{
+		assert werkzeugID > 0 : "Die WerkzeugID muss 1 oder hoeher sein";
 		if (_vorstellung.istNichtGesperrt(platz))
 		{
 			return false;
@@ -37,9 +49,11 @@ public class VorstellungsService extends AbstractObservableService
 			return false;
 		}
 	}
-	
+
 	/**
-	 * Methode für Testfälle um zu pruefen ob richtig in den Tagesplan hinzugefuegt
+	 * Methode für Testfälle um zu pruefen ob richtig in den Tagesplan
+	 * hinzugefuegt
+	 * 
 	 * @param vorstellung
 	 * @return
 	 */
@@ -48,9 +62,102 @@ public class VorstellungsService extends AbstractObservableService
 		return _vorstellung.equals(vorstellung);
 	}
 
+	/**
+	 * Sperrt Plaetze fuer alle PlatzVerkaufsWerkzeuge außer das gegebene
+	 * Informiert Observer über diese Änderung
+	 * 
+	 * @param plaetze
+	 *            Die zu sperrenden Plaetze
+	 * @param werkzeugID
+	 *            Die werkzeug ID
+	 *            
+	 * @require werkzeugID > 0
+	 */
 	public void sperrePlaetze(Collection<Platz> plaetze, int werkzeugID)
 	{
+
+		assert werkzeugID > 0 : "Die WerkzeugID muss 1 oder hoeher sein";
 		_vorstellung.sperrePlaetze(plaetze, werkzeugID);
+		informiereUeberAenderung();
+	}
+
+	/**
+	 * Verkauft den Platz und gibt ihn wieder fuer alle Platzverkaufswerkzeuge
+	 * frei. Informiert OBserver über diese Änderung
+	 * 
+	 * @param platz
+	 *            Der zu verkaufende Platz.
+	 */
+	public void verkaufePlatz(Platz platz)
+	{
+		_vorstellung.verkaufePlatz(platz);
+		_vorstellung.gebePlatzFrei(platz);
+		informiereUeberAenderung();
+	}
+
+	/**
+	 * Stroniert den PLatz und gibt ihn fuer alle PlatzVerkaufsWerkzeuge frei
+	 * Informiert Observer über diese Änderung.
+	 * 
+	 * @param platz
+	 *            Der zu stornierende Platz.
+	 */
+	public void stornierePlatz(Platz platz)
+	{
+		_vorstellung.stornierePlatz(platz);
+		_vorstellung.gebePlatzFrei(platz);
+		informiereUeberAenderung();
+	}
+
+	/**
+	 * Verkauft die Plaetze und gibt sie fuer alle PlatzVerkaufsWerkzeuge frei
+	 * Informiert Observer über diese Änderung.
+	 * 
+	 * @param plaetze
+	 *            Die zu verkaufenden Plaetze.
+	 */
+	public void verkaufePlaetze(Set<Platz> plaetze)
+	{
+		_vorstellung.verkaufePlaetze(plaetze);
+		for (Platz platz : plaetze)
+		{
+			_vorstellung.gebePlatzFrei(platz);
+		}
+		informiereUeberAenderung();
+	}
+
+	/**
+	 * Storniert die Plaetze und gibt sie fuer alle PlatzVerkaufsWerkzeuge frei
+	 * Informiert Observer über diese Änderung.
+	 * 
+	 * @param plaetze
+	 *            Die zu stornierenden Plaetze.
+	 */
+	public void stornierePlaetze(Set<Platz> plaetze)
+	{
+		_vorstellung.stornierePlaetze(plaetze);
+		for (Platz platz : plaetze)
+		{
+			_vorstellung.gebePlatzFrei(platz);
+		}
+		informiereUeberAenderung();
+	}
+
+	/**
+	 * Gibt den Platz frei wenn er von dieser WerkzeugID gesperrt ist.
+	 * 
+	 * @param plaetze
+	 *            Die freizugebenen Plätze.
+	 * @param werkzeugID
+	 *            Die werkzeugID
+	 *            
+	 * @require werkzeugID > 0
+	 */
+	public void gebePlaetzeVonWerkzeugFrei(List<Platz> plaetze, int werkzeugID)
+	{
+
+		assert werkzeugID > 0 : "Die WerkzeugID muss 1 oder hoeher sein";
+		_vorstellung.gebePlaetzeVonWerkzeugFrei(plaetze, werkzeugID);
 		informiereUeberAenderung();
 	}
 
@@ -104,48 +211,9 @@ public class VorstellungsService extends AbstractObservableService
 		return _vorstellung.istPlatzVerkauft(platz);
 	}
 
-	public void verkaufePlatz(Platz platz)
-	{
-		_vorstellung.verkaufePlatz(platz);
-		_vorstellung.gebePlatzFrei(platz);
-		informiereUeberAenderung();
-	}
-
-	public void stornierePlatz(Platz platz)
-	{
-		_vorstellung.stornierePlatz(platz);
-		_vorstellung.gebePlatzFrei(platz);
-		informiereUeberAenderung();
-	}
-
 	public int getAnzahlVerkauftePlaetze()
 	{
 		return _vorstellung.getAnzahlVerkauftePlaetze();
-	}
-
-	public void verkaufePlaetze(Set<Platz> plaetze)
-	{
-		_vorstellung.verkaufePlaetze(plaetze);
-		for (Platz platz : plaetze)
-		{
-			_vorstellung.gebePlatzFrei(platz);
-		}
-		informiereUeberAenderung();
-	}
-
-	public boolean sindVerkaufbar(Set<Platz> plaetze)
-	{
-		return _vorstellung.sindVerkaufbar(plaetze);
-	}
-
-	public void stornierePlaetze(Set<Platz> plaetze)
-	{
-		_vorstellung.stornierePlaetze(plaetze);
-		for (Platz platz : plaetze)
-		{
-			_vorstellung.gebePlatzFrei(platz);
-		}
-		informiereUeberAenderung();
 	}
 
 	public boolean sindStornierbar(Set<Platz> plaetze)
@@ -153,15 +221,14 @@ public class VorstellungsService extends AbstractObservableService
 		return _vorstellung.sindStornierbar(plaetze);
 	}
 
+	public boolean sindVerkaufbar(Set<Platz> plaetze)
+	{
+		return _vorstellung.sindVerkaufbar(plaetze);
+	}
+
 	@Override
 	public String toString()
 	{
 		return _vorstellung.toString();
-	}
-
-	public void gebePlaetzeVonWerkzeugFrei(List<Platz> plaetze, int wERKZEUG_ID)
-	{
-		_vorstellung.gebePlaetzeVonWerkzeugFrei(plaetze, wERKZEUG_ID);
-		informiereUeberAenderung();
 	}
 }

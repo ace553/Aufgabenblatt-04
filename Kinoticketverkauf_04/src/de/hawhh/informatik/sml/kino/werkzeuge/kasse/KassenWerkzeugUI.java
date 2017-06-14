@@ -33,6 +33,7 @@ class KassenWerkzeugUI
     // Die Widgets, aus denen das UI sich zusammensetzt
     protected JFrame _frame;
     private JButton _beendenButton;
+    private JButton _kasseSchliessenButton;
 
     /**
      * Initialisiert die Oberfläche. Die Parameter sind die UIs der Subwerkzeuge,
@@ -126,6 +127,8 @@ class KassenWerkzeugUI
         JPanel bottomPanel = new JPanel();
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
         bottomPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        _kasseSchliessenButton = new JButton("schließe Kasse");
+        bottomPanel.add(_kasseSchliessenButton);
         _beendenButton = new JButton("Beenden");
         bottomPanel.add(_beendenButton);
 
@@ -139,4 +142,9 @@ class KassenWerkzeugUI
     {
         return _beendenButton;
     }
+    
+    public JButton getKasseSchliessenButton()
+	{
+		return _kasseSchliessenButton;
+	}
 }

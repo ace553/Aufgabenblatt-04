@@ -130,6 +130,22 @@ public class KassenWerkzeug
 				reagiereAufBeendenButton();
 			}
 		});
+		
+		_ui.getKasseSchliessenButton().addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				reagiereAufKasseSchliessenButton();
+			}
+		});
+	}
+	
+	private void reagiereAufKasseSchliessenButton()
+	{
+		_platzVerkaufsWerkzeug.setVorstellung(null);
+		_ui.schliesseFenster();
 	}
 
 	/**

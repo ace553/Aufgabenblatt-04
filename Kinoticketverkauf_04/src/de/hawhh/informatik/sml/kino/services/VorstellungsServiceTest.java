@@ -5,10 +5,15 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import de.hawhh.informatik.sml.kino.fachwerte.Datum;
 import de.hawhh.informatik.sml.kino.fachwerte.FSK;
 import de.hawhh.informatik.sml.kino.fachwerte.Geldbetrag;
@@ -40,7 +45,21 @@ public class VorstellungsServiceTest
     	VorstellungsService v = new VorstellungsService(new Vorstellung(_kinoA, _hdR1, _16_45, _20_15,
                 _11_07_2008, 1230));
     	assertFalse(v.istGesperrt(Platz.get(1, 1), 1));
+
+    	List<Platz> plaetze = new ArrayList<Platz>();
+    	plaetze.add(Platz.get(1, 1));
+    	v.sperrePlaetze(plaetze, 1);
+    	assertFalse(v.istGesperrt(Platz.get(1, 1), 1));
+    	v.sperrePlaetze(plaetze, 2);
+    	assertTrue(v.istGesperrt(Platz.get(1, 1), 1));
+    	assertFalse(v.istGesperrt(Platz.get(1, 1), 2));
+    	v.gebePlaetzeVonWerkzeugFrei(plaetze, 1);
+    	assertTrue(v.istGesperrt(Platz.get(1, 1), 1));
+    	v.gebePlaetzeVonWerkzeugFrei(plaetze, 2);
+    	assertFalse(v.istGesperrt(Platz.get(1, 1), 1));
+    	assertFalse(v.istGesperrt(Platz.get(1, 1), 2));
     }
+    
     @Test
     public void testeKonstruktor()
     {
