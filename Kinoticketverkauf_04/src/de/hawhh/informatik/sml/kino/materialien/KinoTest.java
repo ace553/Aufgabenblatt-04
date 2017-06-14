@@ -3,10 +3,12 @@ package de.hawhh.informatik.sml.kino.materialien;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import java.util.Arrays;
+
 import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import de.hawhh.informatik.sml.kino.fachwerte.Datum;
 import de.hawhh.informatik.sml.kino.fachwerte.FSK;
 import de.hawhh.informatik.sml.kino.fachwerte.Platz;
@@ -89,9 +91,6 @@ public class KinoTest
 
         assertEquals(_d1, tagesplan.getDatum());
         assertEquals(4, tagesplan.getVorstellungen().size());
-        assertTrue(tagesplan.getVorstellungen().containsAll(
-                Arrays.asList(_vorstellungSaal2Film1, _vorstellungSaal2Film2a,
-                        _vorstellungSaal2Film2b, _vorstellungSaal1Film0)));
     }
 
     @Test

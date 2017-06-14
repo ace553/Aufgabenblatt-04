@@ -49,7 +49,7 @@ public class TagesplanTest
     {
         _t.fuegeVorstellungHinzu(_vorstellung);
         assertEquals(1, _t.getVorstellungen().size());
-        assertTrue(_t.getVorstellungen().contains(_vorstellung));
+        assertTrue(_t.getVorstellungen().get(0).hatVorstellung(_vorstellung));
     }
 
     @Test
@@ -57,8 +57,8 @@ public class TagesplanTest
     {
         _t.fuegeVorstellungHinzu(_vorstellung2);
         _t.fuegeVorstellungHinzu(_vorstellung);
-        assertEquals(_vorstellung, _t.getVorstellungen().get(0));
-        assertEquals(_vorstellung2, _t.getVorstellungen().get(1));
+        assertTrue(_t.getVorstellungen().get(0).hatVorstellung(_vorstellung));
+        assertTrue(_t.getVorstellungen().get(1).hatVorstellung(_vorstellung2));
     }
 
     @Test

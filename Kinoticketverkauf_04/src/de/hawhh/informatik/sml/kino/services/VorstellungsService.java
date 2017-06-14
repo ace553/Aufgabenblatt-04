@@ -37,6 +37,16 @@ public class VorstellungsService extends AbstractObservableService
 			return false;
 		}
 	}
+	
+	/**
+	 * Methode für Testfälle um zu pruefen ob richtig in den Tagesplan hinzugefuegt
+	 * @param vorstellung
+	 * @return
+	 */
+	public boolean hatVorstellung(Vorstellung vorstellung)
+	{
+		return _vorstellung.equals(vorstellung);
+	}
 
 	public void sperrePlaetze(Collection<Platz> plaetze, int werkzeugID)
 	{
