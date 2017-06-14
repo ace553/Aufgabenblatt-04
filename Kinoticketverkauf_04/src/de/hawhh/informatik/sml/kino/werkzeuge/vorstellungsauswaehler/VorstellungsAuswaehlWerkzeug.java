@@ -1,11 +1,12 @@
 package de.hawhh.informatik.sml.kino.werkzeuge.vorstellungsauswaehler;
 
 import java.util.List;
+
 import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
 import de.hawhh.informatik.sml.kino.materialien.Tagesplan;
-import de.hawhh.informatik.sml.kino.materialien.Vorstellung;
 import de.hawhh.informatik.sml.kino.services.VorstellungsService;
 import de.hawhh.informatik.sml.kino.werkzeuge.ObservableSubwerkzeug;
 

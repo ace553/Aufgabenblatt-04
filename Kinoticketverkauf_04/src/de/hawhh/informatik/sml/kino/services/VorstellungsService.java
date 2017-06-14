@@ -1,6 +1,7 @@
 package de.hawhh.informatik.sml.kino.services;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import de.hawhh.informatik.sml.kino.fachwerte.Datum;
@@ -15,53 +16,31 @@ public class VorstellungsService extends AbstractObservableService
 {
 
 	private Vorstellung _vorstellung;
-	private int[][] _gesperrtVon;
 
 	public VorstellungsService(Vorstellung vorstellung)
 	{
 		_vorstellung = vorstellung;
-		_gesperrtVon = new int[_vorstellung.getKinosaal()
-		        .getAnzahlReihen()][_vorstellung.getKinosaal()
-		                .getAnzahlSitzeProReihe()];
+
 	}
 
 	public boolean istGesperrt(Platz platz, int werkzeugID)
 	{
-		if (_gesperrtVon[platz.getReihe()][platz.getSitz()] == 0)
-			return false;
-		else if (_gesperrtVon[platz.getReihe()][platz.getSitz()] != werkzeugID)
-			return true;
-		else
-			return false;
-	}
-
-	private void sperrePlatz(Platz platz, int werkzeugID)
-	{
-		_gesperrtVon[platz.getReihe()][platz.getSitz()] = werkzeugID;
-	}
-
-	public void gebePlaetzeVonWerkzeugFrei(Collection<Platz> plaetze,
-	        int werkzeugID)
-	{
-		for (Platz platz : plaetze)
+		if (_vorstellung.istNichtGesperrt(platz))
 		{
-			gebePlatzVonWerkzeugFrei(platz, werkzeugID);
+			return false;
+		} else if (!_vorstellung.istGesperrtVon(platz, werkzeugID))
+		{
+
+			return true;
+		} else
+		{
+			return false;
 		}
-	}
-	
-	private void gebePlatzVonWerkzeugFrei(Platz platz, int werkzeugID)
-	{
-		if(_gesperrtVon[platz.getReihe()][platz.getSitz()] == werkzeugID)
-			_gesperrtVon[platz.getReihe()][platz.getSitz()] = 0;
 	}
 
 	public void sperrePlaetze(Collection<Platz> plaetze, int werkzeugID)
 	{
-
-		for (Platz platz : plaetze)
-		{
-			sperrePlatz(platz, werkzeugID);
-		}
+		_vorstellung.sperrePlaetze(plaetze, werkzeugID);
 		informiereUeberAenderung();
 	}
 
@@ -118,14 +97,14 @@ public class VorstellungsService extends AbstractObservableService
 	public void verkaufePlatz(Platz platz)
 	{
 		_vorstellung.verkaufePlatz(platz);
-		_gesperrtVon[platz.getReihe()][platz.getSitz()] = 0;
+		_vorstellung.gebePlatzFrei(platz);
 		informiereUeberAenderung();
 	}
 
 	public void stornierePlatz(Platz platz)
 	{
 		_vorstellung.stornierePlatz(platz);
-		_gesperrtVon[platz.getReihe()][platz.getSitz()] = 0;
+		_vorstellung.gebePlatzFrei(platz);
 		informiereUeberAenderung();
 	}
 
@@ -139,7 +118,7 @@ public class VorstellungsService extends AbstractObservableService
 		_vorstellung.verkaufePlaetze(plaetze);
 		for (Platz platz : plaetze)
 		{
-			_gesperrtVon[platz.getReihe()][platz.getSitz()] = 0;
+			_vorstellung.gebePlatzFrei(platz);
 		}
 		informiereUeberAenderung();
 	}
@@ -154,7 +133,7 @@ public class VorstellungsService extends AbstractObservableService
 		_vorstellung.stornierePlaetze(plaetze);
 		for (Platz platz : plaetze)
 		{
-			_gesperrtVon[platz.getReihe()][platz.getSitz()] = 0;
+			_vorstellung.gebePlatzFrei(platz);
 		}
 		informiereUeberAenderung();
 	}
@@ -168,5 +147,11 @@ public class VorstellungsService extends AbstractObservableService
 	public String toString()
 	{
 		return _vorstellung.toString();
+	}
+
+	public void gebePlaetzeVonWerkzeugFrei(List<Platz> plaetze, int wERKZEUG_ID)
+	{
+		_vorstellung.gebePlaetzeVonWerkzeugFrei(plaetze, wERKZEUG_ID);
+		informiereUeberAenderung();
 	}
 }
