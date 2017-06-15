@@ -17,10 +17,41 @@ public class VorstellungsService extends AbstractObservableService
 
 	private Vorstellung _vorstellung;
 
+	private int[][] _gesperrtVon;
+
 	public VorstellungsService(Vorstellung vorstellung)
 	{
 		_vorstellung = vorstellung;
+		_gesperrtVon = new int[_vorstellung.getKinosaal().getAnzahlReihen()][_vorstellung.getKinosaal()
+		                                   		        .getAnzahlSitzeProReihe()];
 
+	}
+	
+	
+	public synchronized boolean istNichtGesperrt(Platz platz)
+	{
+		return _gesperrtVon[platz.getReihe()][platz.getSitz()] == 0;
+	}
+	
+	public synchronized boolean istGesperrtVon(Platz platz, int werkzeugID)
+	{
+		return _gesperrtVon[platz.getReihe()][platz.getSitz()] == werkzeugID;
+	}
+	
+	private synchronized void sperrePlatz(Platz platz, int werkzeugID)
+	{
+		_gesperrtVon[platz.getReihe()][platz.getSitz()] = werkzeugID;
+	}
+	
+	private void gebePlatzVonWerkzeugFrei(Platz platz, int werkzeugID)
+	{
+		if (istGesperrtVon(platz, werkzeugID))
+			gebePlatzFrei(platz);
+	}
+	
+	public synchronized void gebePlatzFrei(Platz platz)
+	{
+		_gesperrtVon[platz.getReihe()][platz.getSitz()] = 0;
 	}
 
 	/**
@@ -37,10 +68,10 @@ public class VorstellungsService extends AbstractObservableService
 	public boolean istGesperrt(Platz platz, int werkzeugID)
 	{
 		assert werkzeugID > 0 : "Die WerkzeugID muss 1 oder hoeher sein";
-		if (_vorstellung.istNichtGesperrt(platz))
+		if (istNichtGesperrt(platz))
 		{
 			return false;
-		} else if (!_vorstellung.istGesperrtVon(platz, werkzeugID))
+		} else if (!istGesperrtVon(platz, werkzeugID))
 		{
 
 			return true;
@@ -77,10 +108,13 @@ public class VorstellungsService extends AbstractObservableService
 	{
 
 		assert werkzeugID > 0 : "Die WerkzeugID muss 1 oder hoeher sein";
-		_vorstellung.sperrePlaetze(plaetze, werkzeugID);
+		for (Platz platz : plaetze)
+		{
+			sperrePlatz(platz, werkzeugID);
+		}
 		informiereUeberAenderung();
 	}
-
+	
 	/**
 	 * Verkauft den Platz und gibt ihn wieder fuer alle Platzverkaufswerkzeuge
 	 * frei. Informiert OBserver über diese Änderung
@@ -91,7 +125,7 @@ public class VorstellungsService extends AbstractObservableService
 	public void verkaufePlatz(Platz platz)
 	{
 		_vorstellung.verkaufePlatz(platz);
-		_vorstellung.gebePlatzFrei(platz);
+		gebePlatzFrei(platz);
 		informiereUeberAenderung();
 	}
 
@@ -105,7 +139,7 @@ public class VorstellungsService extends AbstractObservableService
 	public void stornierePlatz(Platz platz)
 	{
 		_vorstellung.stornierePlatz(platz);
-		_vorstellung.gebePlatzFrei(platz);
+		gebePlatzFrei(platz);
 		informiereUeberAenderung();
 	}
 
@@ -121,7 +155,7 @@ public class VorstellungsService extends AbstractObservableService
 		_vorstellung.verkaufePlaetze(plaetze);
 		for (Platz platz : plaetze)
 		{
-			_vorstellung.gebePlatzFrei(platz);
+			gebePlatzFrei(platz);
 		}
 		informiereUeberAenderung();
 	}
@@ -138,7 +172,7 @@ public class VorstellungsService extends AbstractObservableService
 		_vorstellung.stornierePlaetze(plaetze);
 		for (Platz platz : plaetze)
 		{
-			_vorstellung.gebePlatzFrei(platz);
+			gebePlatzFrei(platz);
 		}
 		informiereUeberAenderung();
 	}
@@ -157,7 +191,10 @@ public class VorstellungsService extends AbstractObservableService
 	{
 
 		assert werkzeugID > 0 : "Die WerkzeugID muss 1 oder hoeher sein";
-		_vorstellung.gebePlaetzeVonWerkzeugFrei(plaetze, werkzeugID);
+		for (Platz platz : plaetze)
+		{
+			gebePlatzVonWerkzeugFrei(platz, werkzeugID);
+		}
 		informiereUeberAenderung();
 	}
 

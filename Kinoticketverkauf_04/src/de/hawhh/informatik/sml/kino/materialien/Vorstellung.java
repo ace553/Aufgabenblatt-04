@@ -1,7 +1,7 @@
 package de.hawhh.informatik.sml.kino.materialien;
 
-import java.util.Collection;
 import java.util.Set;
+
 import de.hawhh.informatik.sml.kino.fachwerte.Datum;
 import de.hawhh.informatik.sml.kino.fachwerte.Geldbetrag;
 import de.hawhh.informatik.sml.kino.fachwerte.Platz;
@@ -26,7 +26,6 @@ public class Vorstellung
 	private Geldbetrag _preis;
 	private boolean[][] _verkauft;
 	private int _anzahlVerkauftePlaetze;
-	private int[][] _gesperrtVon;
 
 	/**
 	 * Erstellt eine neue Vorstellung.
@@ -74,55 +73,12 @@ public class Vorstellung
 		_preis = Geldbetrag.gibBetrag(preis);
 		_verkauft = new boolean[kinosaal.getAnzahlReihen()][kinosaal
 		        .getAnzahlSitzeProReihe()];
-		_gesperrtVon = new int[kinosaal.getAnzahlReihen()][kinosaal
-		        .getAnzahlSitzeProReihe()];
+		
 		_anzahlVerkauftePlaetze = 0;
 	}
-	
-	public synchronized boolean istNichtGesperrt(Platz platz)
-	{
-		return _gesperrtVon[platz.getReihe()][platz.getSitz()] == 0;
-	}
-	
-	public synchronized boolean istGesperrtVon(Platz platz, int werkzeugID)
-	{
-		return _gesperrtVon[platz.getReihe()][platz.getSitz()] == werkzeugID;
-	}
-	
-	private synchronized void sperrePlatz(Platz platz, int werkzeugID)
-	{
-		_gesperrtVon[platz.getReihe()][platz.getSitz()] = werkzeugID;
-	}
-	
-	public void sperrePlaetze(Collection<Platz> plaetze, int werkzeugID)
-	{
 
-		for (Platz platz : plaetze)
-		{
-			sperrePlatz(platz, werkzeugID);
-		}
-	}
-	
-	private void gebePlatzVonWerkzeugFrei(Platz platz, int werkzeugID)
-	{
-		if (istGesperrtVon(platz, werkzeugID))
-			gebePlatzFrei(platz);
-	}
-	
-	public synchronized void gebePlatzFrei(Platz platz)
-	{
-		_gesperrtVon[platz.getReihe()][platz.getSitz()] = 0;
-	}
 	
 
-	public void gebePlaetzeVonWerkzeugFrei(Collection<Platz> plaetze,
-	        int werkzeugID)
-	{
-		for (Platz platz : plaetze)
-		{
-			gebePlatzVonWerkzeugFrei(platz, werkzeugID);
-		}
-	}
 
 
 	/**
