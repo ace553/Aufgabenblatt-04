@@ -28,7 +28,7 @@ public class PlatzVerkaufsWerkzeug extends ObservableSubwerkzeug
         implements ServiceObserver
 {
 
-	private static int werkzeugIDCounter = 0;
+	private static Integer werkzeugIDCounter = 0;
 	private final int WERKZEUG_ID;
 	// Die aktuelle Vorstellung, deren Plätze angezeigt werden. Kann null sein.
 	private VorstellungsService _vorstellung;
@@ -40,11 +40,19 @@ public class PlatzVerkaufsWerkzeug extends ObservableSubwerkzeug
 	 */
 	public PlatzVerkaufsWerkzeug()
 	{
-		WERKZEUG_ID = ++werkzeugIDCounter;
+		WERKZEUG_ID = nextWerkzeugID();
 		_ui = new PlatzVerkaufsWerkzeugUI();
 		registriereUIAktionen();
 		// Am Anfang wird keine Vorstellung angezeigt:
 		setVorstellung(null);
+	}
+	
+	private static int nextWerkzeugID()
+	{
+		synchronized(werkzeugIDCounter)
+		{
+			return  ++werkzeugIDCounter;
+		}
 	}
 
 	@Override
