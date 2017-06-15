@@ -58,6 +58,14 @@ public class PlatzVerkaufsWerkzeug extends ObservableSubwerkzeug
 	@Override
 	public void reagiereAufAenderung()
 	{
+		reagiereAufVorstellungsUpdate();
+	}
+	
+	/**
+	 * Reagiert auf ein Update von der Vorstellung.
+	 */
+	private void reagiereAufVorstellungsUpdate()
+	{
 		if (_vorstellung != null)
 		{
 			for (Platz platz : _vorstellung.getKinosaal().getPlaetze())
@@ -78,7 +86,8 @@ public class PlatzVerkaufsWerkzeug extends ObservableSubwerkzeug
 			}
 		}
 	}
-
+	
+	
 	/**
 	 * Gibt das Panel dieses Subwerkzeugs zurück. Das Panel sollte von einem
 	 * Kontextwerkzeug eingebettet werden.
